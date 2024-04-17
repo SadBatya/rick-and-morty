@@ -6,15 +6,20 @@ import FilterPanel from './components/FilterPanel.vue';
 <template>
   <FilterPanel />
   <div class="navigation_panel">
-    <input type="text" />
     <div>
-      <select name="status" v-model="selectedStatus">
+      <input v-model="value" />
+      <button @click="sortByName">Поиск</button>
+    </div>
+    <div>
+      <select
+        name="status"
+        v-model="selectedStatus"
+      >
         <option value=" ">All</option>
         <option value="Alive">Alive</option>
         <option value="Dead">Died</option>
       </select>
     </div>
-    
     <button @click="sortByStatus(selectedStatus)">Применить</button>
   </div>
 
@@ -57,6 +62,7 @@ export default {
       sortedCharacter: [],
       page: 1,
       totalPages: null,
+      value: '',
     };
   },
   created() {
@@ -77,6 +83,17 @@ export default {
     sortByStatus(status) {
       axios
         .get(`https://rickandmortyapi.com/api/character/?status=${status}`)
+        .then((res) => {
+          this.characters = res.data.results;
+          this.totalPages = res.data.info.pages;
+        })
+        .catch((e) => {
+          console.error('Ошибка при получении персонажей:', e);
+        });
+    },
+    sortByName() {
+      axios
+        .get(`https://rickandmortyapi.com/api/character/?name=${this.value}`)
         .then((res) => {
           this.characters = res.data.results;
           this.totalPages = res.data.info.pages;
