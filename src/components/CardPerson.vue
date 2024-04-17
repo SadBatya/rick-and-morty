@@ -1,9 +1,7 @@
 <template>
   <div class="person_card">
     <div class="person_img">
-      <img
-        :src="img"
-      />
+      <img :src="img" />
     </div>
     <div class="person_info">
       <div class="person_name">
@@ -44,7 +42,7 @@ export default {
   gap: 15px;
   width: 600px;
   height: 220px;
-  margin: 0.75rem;
+  margin: 0.2rem;
 }
 .person_info {
   display: flex;

@@ -5,16 +5,30 @@ import FilterPanel from './components/FilterPanel.vue';
 
 <template>
   <FilterPanel />
+  <div class="navigation_panel">
+    <input type="text" />
+    <div>
+      <select name="status" v-model="selectedStatus">
+        <option value=" ">All</option>
+        <option value="Alive">Alive</option>
+        <option value="Dead">Died</option>
+      </select>
+    </div>
+    
+    <button @click="sortByStatus(selectedStatus)">Применить</button>
+  </div>
 
-  <CardPerson
-    v-for="(person, index) in characters"
-    :key="index"
-    :name="person.name"
-    seen="The Ricklantis Mixup"
-    location="Citadel of Ricks"
-    :status="person.status"
-    :img="person.image"
-  />
+  <div class="cards">
+    <CardPerson
+      v-for="(person, index) in characters"
+      :key="index"
+      :name="person.name"
+      seen="The Ricklantis Mixup"
+      location="Citadel of Ricks"
+      :status="person.status"
+      :img="person.image"
+    />
+  </div>
   <div class="pagination_panel">
     <button
       :disabled="page === 1"
@@ -40,6 +54,7 @@ export default {
   data() {
     return {
       characters: [],
+      sortedCharacter: [],
       page: 1,
       totalPages: null,
     };
@@ -59,9 +74,19 @@ export default {
           console.error('Ошибка при получении персонажей:', e);
         });
     },
+    sortByStatus(status) {
+      axios
+        .get(`https://rickandmortyapi.com/api/character/?status=${status}`)
+        .then((res) => {
+          this.characters = res.data.results;
+          this.totalPages = res.data.info.pages;
+        })
+        .catch((e) => {
+          console.error('Ошибка при получении персонажей:', e);
+        });
+    },
     nextPage() {
       if (this.page < this.totalPages) {
-        console.log('click');
         this.page++;
         this.fetchCharacters();
       }
@@ -76,6 +101,20 @@ export default {
 };
 </script>
 <style scoped>
+.navigation_panel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .pagination_panel {
   display: flex;
   justify-content: space-between;
