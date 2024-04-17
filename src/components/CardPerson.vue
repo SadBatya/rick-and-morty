@@ -2,8 +2,7 @@
   <div class="person_card">
     <div class="person_img">
       <img
-        src="../../public/70.jpeg"
-        alt=""
+        :src="img"
       />
     </div>
     <div class="person_info">
@@ -31,6 +30,7 @@ export default {
     location: String,
     seen: String,
     status: String,
+    img: String,
   },
 };
 </script>
